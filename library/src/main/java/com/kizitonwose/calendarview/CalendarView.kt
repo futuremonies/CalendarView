@@ -229,6 +229,9 @@ open class CalendarView : RecyclerView {
 
     private val pagerSnapHelper = CalenderPageSnapHelper()
 
+    private lateinit var startDate: LocalDate
+    private lateinit var endDate: LocalDate
+
     private var startMonth: YearMonth? = null
     private var endMonth: YearMonth? = null
     private var firstDayOfWeek: DayOfWeek? = null
@@ -660,8 +663,11 @@ open class CalendarView : RecyclerView {
      * @param endMonth The last month on the calendar.
      * @param firstDayOfWeek An instance of [DayOfWeek] enum to be the first day of week.
      */
-    fun setup(startMonth: YearMonth, endMonth: YearMonth, firstDayOfWeek: DayOfWeek) {
+    fun setup(startMonth: YearMonth, endMonth: YearMonth, firstDayOfWeek: DayOfWeek,
+              startDate: LocalDate = LocalDate.now(), endDate: LocalDate = LocalDate.now()) {
         configJob?.cancel()
+        this.startDate = startDate
+        this.endDate = endDate
         this.startMonth = startMonth
         this.endMonth = endMonth
         this.firstDayOfWeek = firstDayOfWeek
@@ -717,7 +723,8 @@ open class CalendarView : RecyclerView {
         adapter = CalendarAdapter(
             this,
             ViewConfig(dayViewResource, monthHeaderResource, monthFooterResource, monthViewClass),
-            monthConfig
+            monthConfig,
+            startDate, endDate
         )
     }
 

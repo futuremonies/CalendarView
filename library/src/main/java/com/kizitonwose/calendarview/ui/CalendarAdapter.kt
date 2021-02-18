@@ -31,11 +31,13 @@ internal data class ViewConfig(
 internal class CalendarAdapter(
     private val calView: CalendarView,
     internal var viewConfig: ViewConfig,
-    internal var monthConfig: MonthConfig
+    internal var monthConfig: MonthConfig,
+    private val startDate: LocalDate,
+    private val endDate: LocalDate
 ) : RecyclerView.Adapter<MonthViewHolder>() {
 
-    private val months: List<CalendarMonth>
-        get() = monthConfig.months
+    private val months: MutableList<CalendarMonth>
+        get() = monthConfig.months as MutableList<CalendarMonth>
 
     // Values of headerViewId & footerViewId will be
     // replaced with IDs set in the XML if present.
@@ -49,6 +51,8 @@ internal class CalendarAdapter(
                 initialLayout = true
             }
         })
+        // Keep only days that fall between startDate and endDate
+        months.removeIf { e -> e.weekDays.last().last().date.isBefore(startDate) || e.weekDays.first().first().date.isAfter(endDate)  }
     }
 
     private val isAttached: Boolean
